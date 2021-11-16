@@ -15,13 +15,15 @@ import java.util.Map;
 
 public class ChannelSFTPInterceptor extends MyBaseInterceptor{
 
-    IReflector getSession, getHost;
+    IReflector getSession, getHost, getPort, getUserName;
 
     public ChannelSFTPInterceptor() {
         super();
 
         getSession = makeInvokeInstanceMethodReflector("getSession");
         getHost = makeInvokeInstanceMethodReflector("getHost"); //String
+        getPort = makeInvokeInstanceMethodReflector("getPort"); //Integer
+        getUserName = makeInvokeInstanceMethodReflector("getUserName"); //String
     }
 
     @Override
@@ -35,9 +37,14 @@ public class ChannelSFTPInterceptor extends MyBaseInterceptor{
         Integer mode = (Integer) params[3]; // 0=OVERWRITE, 1=RESUME, 2=APPEND
         Object session = getReflectiveObject(objectIntercepted, getSession);
         String remoteHostName = getReflectiveString(session, getHost, "UNKNOWN-HOST");
+        Integer remotePort = getReflectiveInteger(session, getPort, 22);
+        String remoteUserName = getReflectiveString(session, getUserName, "UNKNOWN-USER");
         String exitCallName = String.format("SFTP %s %s",methodName, remoteHostName);
         Map<String,String> map = new HashMap<>();
         map.put("HOST", remoteHostName);
+        map.put("PORT", String.valueOf(remotePort));
+        map.put("USER", remoteUserName);
+        map.put("VERB", methodName);
         ExitCall exitCall = transaction.startExitCall(map, exitCallName, ExitTypes.CUSTOM, false);
         String sftpCommandString = "UNKNOWN-COMMAND";
         if( methodName.equals("put") ) {
