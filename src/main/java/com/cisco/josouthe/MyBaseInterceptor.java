@@ -77,7 +77,7 @@ public abstract class MyBaseInterceptor extends AGenericInterceptor {
     }
 
     protected Map<String,String> getListOfCustomProperties() {
-        return new HashMap<>();
+        return new HashMap<String,String>();
     }
 
     protected boolean isAnalyticsEnabledForClass( String className ) {

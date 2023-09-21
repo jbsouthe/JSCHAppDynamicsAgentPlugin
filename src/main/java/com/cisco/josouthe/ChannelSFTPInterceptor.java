@@ -40,7 +40,7 @@ public class ChannelSFTPInterceptor extends MyBaseInterceptor{
         Integer remotePort = getReflectiveInteger(session, getPort, 22);
         String remoteUserName = getReflectiveString(session, getUserName, "UNKNOWN-USER");
         String exitCallName = String.format("SFTP %s %s",methodName, remoteHostName);
-        Map<String,String> map = new HashMap<>();
+        Map<String,String> map = new HashMap<String,String>();
         map.put("HOST", remoteHostName);
         map.put("PORT", String.valueOf(remotePort));
         map.put("USER", remoteUserName);
